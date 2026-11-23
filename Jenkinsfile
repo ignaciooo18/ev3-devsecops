@@ -46,9 +46,11 @@ pipeline {
                 echo 'Ejecutando pruebas dinamicas DAST con OWASP ZAP...'
                 sh '''
                     docker rm -f zap-temp || true
-                    docker run --name zap-temp ghcr.io/zaproxy/zaproxy:stable zap-baseline.py -t http://host.docker.internal:5000/hello?name=test -r zap-report.html || true
+                    docker volume rm zap_wrk || true
+                    docker run --name zap-temp -v zap_wrk:/zap/wrk ghcr.io/zaproxy/zaproxy:stable zap-baseline.py -t http://host.docker.internal:5000/hello?name=test -r zap-report.html || true
                     docker cp zap-temp:/zap/wrk/zap-report.html ./zap-report.html
                     docker rm -f zap-temp || true
+                    docker volume rm zap_wrk || true
                 '''
             }
         }
