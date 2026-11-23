@@ -41,13 +41,13 @@ pipeline {
             }
         }
 
-            stage('4. Pruebas Seguridad OWASP ZAP') {
+        stage('4. Pruebas Seguridad OWASP ZAP') {
             steps {
                 echo 'Ejecutando pruebas dinamicas DAST con OWASP ZAP...'
                 sh '''
                     docker rm -f zap-temp || true
-                    docker run --name zap-temp ghcr.io/zaproxy/zaproxy:stable zap-baseline.py -t http://host.docker.internal:5000/hello?name=test -r /tmp/zap-report.html || true
-                    docker cp zap-temp:/tmp/zap-report.html ./zap-report.html
+                    docker run --name zap-temp ghcr.io/zaproxy/zaproxy:stable zap-baseline.py -t http://host.docker.internal:5000/hello?name=test -r zap-report.html || true
+                    docker cp zap-temp:/zap/wrk/zap-report.html ./zap-report.html
                     docker rm -f zap-temp || true
                 '''
             }
