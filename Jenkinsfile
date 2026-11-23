@@ -19,10 +19,10 @@ pipeline {
                 echo 'Ejecutando analisis estatico de seguridad (SAST) con Bandit...'
                 sh '''
                     docker rm -f bandit-temp || true
-                    docker create --name bandit-temp python:3.11-slim bash -c "pip install -q bandit && bandit -r /src/app.py -f txt -o /src/bandit-report.txt || true"
-                    docker cp app.py bandit-temp:/src/app.py
+                    docker create --name bandit-temp python:3.11-slim bash -c "pip install -q bandit && bandit -r /tmp/app.py -f txt -o /tmp/bandit-report.txt || true"
+                    docker cp app.py bandit-temp:/tmp/app.py
                     docker start -a bandit-temp
-                    docker cp bandit-temp:/src/bandit-report.txt ./bandit-report.txt
+                    docker cp bandit-temp:/tmp/bandit-report.txt ./bandit-report.txt
                     docker rm -f bandit-temp
                     cat bandit-report.txt
                 '''
